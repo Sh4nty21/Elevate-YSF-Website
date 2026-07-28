@@ -1,0 +1,316 @@
+/* ============================================================
+   ELEVATE YSF — DESIGN SYSTEM
+   Palette pulled straight from the new logo: ink black, court
+   white, and the marker-stroke red on the logo's "A". The look
+   is a hand-drawn locker-room whiteboard crossed with a
+   scoreboard: bold condensed type, a red "stroke" accent used
+   the way a coach circles a play, and a dashed halfcourt-line
+   motif used as the section divider throughout the site.
+   ============================================================ */
+
+:root {
+  /* Color tokens */
+  --ink: #141414;
+  --ink-soft: #232323;
+  --court: #faf8f4;
+  --court-line: #e7e3da;
+  --white: #ffffff;
+  --red: #d5312a;
+  --red-dark: #a8241f;
+  --red-tint: #fdeceb;
+  --gold: #e8a13d;
+  --success: #1f8a4c;
+  --muted: #6b6760;
+
+  /* Type */
+  --font-display: "Anton", "Arial Narrow", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-script: "Permanent Marker", cursive;
+
+  /* Layout */
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow-card: 0 10px 30px -12px rgba(20, 20, 20, 0.25);
+  --shadow-pop: 0 4px 14px rgba(20, 20, 20, 0.15);
+  --max-width: 1180px;
+  --header-h: 76px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--court);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: 0.5px;
+  line-height: 1.05;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+p { line-height: 1.6; margin: 0; }
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  padding: 14px 28px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+.btn:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--red); color: var(--white); box-shadow: var(--shadow-pop); }
+.btn-primary:hover { background: var(--red-dark); transform: translateY(-2px); }
+.btn-outline { background: transparent; color: var(--white); border-color: var(--white); }
+.btn-outline:hover { background: var(--white); color: var(--ink); transform: translateY(-2px); }
+.btn-dark { background: var(--ink); color: var(--white); }
+.btn-dark:hover { background: var(--ink-soft); transform: translateY(-2px); }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; }
+
+/* ---------- Whistle-line divider (signature element) ---------- */
+.court-divider {
+  position: relative;
+  height: 34px;
+  margin: 0 auto;
+  max-width: var(--max-width);
+}
+.court-divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 24px;
+  right: 24px;
+  border-top: 3px dashed var(--court-line);
+  transform: translateY(-50%);
+}
+.court-divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--red);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--court);
+}
+
+/* ---------- Section titles ---------- */
+.eyebrow {
+  font-family: var(--font-script);
+  color: var(--red);
+  font-size: 1.1rem;
+  transform: rotate(-2deg);
+  display: inline-block;
+  margin-bottom: 6px;
+}
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin-bottom: 8px;
+}
+.section-head { text-align: center; margin: 0 auto 40px; max-width: 640px; }
+.section-sub { color: var(--muted); font-size: 1.05rem; }
+
+/* ---------- Toast ---------- */
+.toast-stack {
+  position: fixed;
+  top: 90px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: min(360px, calc(100vw - 40px));
+}
+.toast {
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  color: var(--white);
+  box-shadow: var(--shadow-card);
+  font-size: 0.92rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  animation: toast-in 0.25s ease;
+}
+.toast.success { background: var(--success); }
+.toast.error { background: var(--red-dark); }
+.toast.warn { background: var(--gold); color: var(--ink); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ---------- Form elements (login/signup) ---------- */
+.field {
+  margin-bottom: 18px;
+  text-align: left;
+}
+.field label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.input-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--court);
+  border: 2px solid var(--court-line);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input-box:focus-within {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--red-tint);
+}
+.input-box i { color: var(--muted); width: 18px; text-align: center; }
+.input-box input,
+.input-box select {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1rem;
+  width: 100%;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+.input-box button.reveal {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+}
+.field-error {
+  color: var(--red-dark);
+  font-size: 0.82rem;
+  margin-top: 6px;
+  min-height: 1.1em;
+}
+.field-hint { color: var(--muted); font-size: 0.78rem; margin-top: 6px; }
+
+.strength-meter {
+  height: 6px;
+  border-radius: 4px;
+  background: var(--court-line);
+  overflow: hidden;
+  margin-top: 8px;
+}
+.strength-fill { height: 100%; transition: width 0.2s ease, background 0.2s ease; }
+
+.form-banner {
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.form-banner.error { background: var(--red-tint); color: var(--red-dark); }
+.form-banner.success { background: #e9f7ee; color: var(--success); }
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 28px;
+}
+
+/* ---------- Schedule / reminder banner (signature) ---------- */
+.schedule-banner {
+  background: var(--ink);
+  color: var(--white);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+}
+.schedule-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg, var(--red) 0 10px, transparent 10px 20px
+  );
+  opacity: 0.06;
+  pointer-events: none;
+}
+.schedule-clock {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  color: var(--red);
+  letter-spacing: 1px;
+  min-width: 160px;
+}
+.schedule-meta { flex: 1; min-width: 200px; }
+.schedule-meta h3 { font-size: 1.2rem; margin-bottom: 4px; }
+.schedule-meta p { color: #d8d5cf; font-size: 0.92rem; }
+
+/* Utility */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap;
+}
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--red);
+  color: var(--white);
+  padding: 10px 16px;
+  z-index: 10000;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus { left: 0; }

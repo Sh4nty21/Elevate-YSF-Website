@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Elevate YSF | Youth Sports Fellowship</title>
+  <meta name="description" content="Elevate YSF — a youth sports ministry making Christ-committed followers through sports. Join a program, pre-check in for Saturday sessions, and grow with your D-Group." />
+  <meta name="theme-color" content="#141414" />
+
+  <!-- PLACEHOLDER: replace with your real favicon -->
+  <link rel="icon" href="img/elevate-ysf-logo.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/management.css">
+
+  <!--
+    ============================================================
+    BACKEND API BASE URL
+    ------------------------------------------------------------
+    If the frontend and backend are hosted separately, set the
+    full backend URL here BEFORE app.js loads, e.g.:
+      window.YSF_API_BASE = 'https://api.yourchurchdomain.com/backend';
+    Leave as-is if frontend + backend share the same domain/folder.
+    ============================================================
+  -->
+  <script>
+    // window.YSF_API_BASE = ''; // <-- set this when you deploy
+  </script>
+
+  <!-- Vue 3 + Vue Router 4 (global builds — no build step required) -->
+  <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/vue-router@4.3.3/dist/vue-router.global.prod.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Vue mounts here. Basic non-JS fallback message: -->
+    <noscript>Please enable JavaScript to use the Elevate YSF website.</noscript>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
