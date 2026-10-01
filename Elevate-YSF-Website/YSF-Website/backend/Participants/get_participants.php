@@ -50,11 +50,6 @@ try {
 
 } catch (PDOException $e) {
 
-    sendResponse(
-        false,
-        $e->getMessage(),
-        [],
-        500
-    );
+    failWithServerError($e, 'Could not load participants. Please try again later.');
 
 }

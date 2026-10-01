@@ -1,10 +1,6 @@
 <?php
 require_once 'config.php';
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 try {
 
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -24,7 +20,13 @@ try {
 
     $pdo = getDBConnection();
 
-    // TEMP: Skip brute-force checking for debugging
+    // Brute-force protection (LOGIN_MAX_ATTEMPTS / LOGIN_LOCKOUT_SECONDS in config.php).
+    // Column is VARCHAR(100), so store at most 100 characters of what was typed.
+    $attemptKey = substr($identifier, 0, 100);
+    if (isLoginLocked($pdo, $attemptKey, $ip)) {
+        sendResponse(false, 'Too many failed attempts. Please wait 15 minutes and try again.', [], 429);
+    }
+
     $stmt = $pdo->prepare("
     SELECT
         u.user_id,
@@ -51,14 +53,14 @@ try {
 
     $user = $stmt->fetch();
 
-    if (!$user) {
+    // Same message for an unknown user and a wrong password, so attackers
+    // can't tell which usernames exist.
+    if (!$user || !password_verify($password, $user['password_hash'])) {
+        recordLoginAttempt($pdo, $attemptKey, $ip, false);
         sendResponse(false, 'Incorrect username/email or password.', [], 401);
     }
 
-    if (!password_verify($password, $user['password_hash'])) {
-        sendResponse(false, 'Incorrect username/email or password.', [], 401);
-    }
-
+    recordLoginAttempt($pdo, $attemptKey, $ip, true);
     session_regenerate_id(true);
 
     $_SESSION['user_id'] = $user['user_id'];
@@ -101,15 +103,5 @@ try {
         ]);
 
 } catch (Throwable $e) {
-
-    http_response_code(500);
-
-    echo json_encode([
-        'success' => false,
-        'error' => $e->getMessage(),
-        'file' => $e->getFile(),
-        'line' => $e->getLine()
-    ]);
-
-    exit;
+    failWithServerError($e, 'Login is unavailable right now. Please try again later.');
 }

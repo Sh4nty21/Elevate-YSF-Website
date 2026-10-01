@@ -51,10 +51,6 @@ try {
 
 } catch (Exception $e) {
 
-    sendResponse(
-        false,
-        null,
-        $e->getMessage()
-    );
+    failWithServerError($e, 'Could not update your profile. Please try again later.');
 
 }

@@ -142,6 +142,51 @@ function requireLogin() {
     }
 }
 
+/**
+ * Log the real error on the server and send the visitor a generic message,
+ * so database details, file paths and line numbers never reach the browser.
+ */
+function failWithServerError($e, $message = 'Something went wrong. Please try again later.') {
+    error_log('[YSF] ' . get_class($e) . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+    sendResponse(false, $message, [], 500);
+}
+
+/**
+ * Brute-force protection: true when this username/email has failed
+ * LOGIN_MAX_ATTEMPTS times from this IP within the last LOGIN_LOCKOUT_SECONDS.
+ */
+function isLoginLocked(PDO $pdo, $identifier, $ip) {
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*) FROM login_attempts
+          WHERE identifier = :identifier
+            AND ip_address = :ip
+            AND success = 0
+            AND attempted_at > (NOW() - INTERVAL :seconds SECOND)'
+    );
+    $stmt->execute([
+        'identifier' => $identifier,
+        'ip'         => $ip,
+        'seconds'    => LOGIN_LOCKOUT_SECONDS,
+    ]);
+    return (int) $stmt->fetchColumn() >= LOGIN_MAX_ATTEMPTS;
+}
+
+/** Record a login attempt; a success clears earlier failures for this user + IP. */
+function recordLoginAttempt(PDO $pdo, $identifier, $ip, $success) {
+    if ($success) {
+        $clear = $pdo->prepare('DELETE FROM login_attempts WHERE identifier = :identifier AND ip_address = :ip');
+        $clear->execute(['identifier' => $identifier, 'ip' => $ip]);
+    }
+    $stmt = $pdo->prepare(
+        'INSERT INTO login_attempts (identifier, ip_address, success) VALUES (:identifier, :ip, :success)'
+    );
+    $stmt->execute([
+        'identifier' => $identifier,
+        'ip'         => $ip,
+        'success'    => $success ? 1 : 0,
+    ]);
+}
+
 /** Decode a JSON POST body into an assoc array (falls back to $_POST). */
 function jsonBody() {
     $raw = file_get_contents('php://input');
